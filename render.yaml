@@ -59,6 +59,28 @@ services:
       - key: ALLOW_DEMO_PAYMENTS
         value: "true"
 
+      # optional: Redis (Upstash free tier gives a rediss:// url). Shared rate limits, email queue.
+      - key: REDIS_URL
+        sync: false
+
+      # optional: Meilisearch Cloud, for typo-tolerant search
+      - key: MEILI_HOST
+        sync: false
+      - key: MEILI_API_KEY
+        sync: false
+
+      # optional: Razorpay test keys (rzp_test_...)
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+
+      # optional: error tracking
+      - key: SENTRY_DSN
+        sync: false
+
       # optional extras
       - key: GOOGLE_CLIENT_ID
         sync: false

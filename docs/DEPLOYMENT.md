@@ -25,6 +25,18 @@ and **API secret**. (The API's own disk is wiped on every deploy, so production 
 Create a free account at <https://www.brevo.com>, verify a sender address, and create SMTP credentials
 (Settings → SMTP & API). Use host `smtp-relay.brevo.com`, port `587`. Any SMTP provider works the same way.
 
+## 3b. Optional services (skip any; the app falls back)
+
+| Service  | Free option                                          | Variables (on Render)                          |
+| -------- | ---------------------------------------------------- | ---------------------------------------------- |
+| Redis    | Upstash, create a database, copy the `rediss://` url | `REDIS_URL`                                    |
+| Search   | Meilisearch Cloud (trial) or your own container      | `MEILI_HOST`, `MEILI_API_KEY`                  |
+| Payments | Razorpay, switch to Test mode, copy keys             | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`       |
+| Errors   | Sentry, new Node project                             | `SENTRY_DSN` (and `VITE_SENTRY_DSN` on Vercel) |
+
+For Razorpay's webhook, add `https://<your-api>.onrender.com/api/payments/webhook/razorpay` in its
+dashboard and set the secret you choose as `RAZORPAY_WEBHOOK_SECRET`.
+
 ## 4. The API on Render
 
 1. Push this repository to GitHub.
@@ -94,11 +106,15 @@ assistant still answers from its built-in guide. If Google changes model names, 
 
 ## Going real (what's missing for actual customers)
 
-1. **A payment gateway.** Add a provider beside the demo one (Razorpay or Cashfree, test mode first). Its
-   webhook goes through the same signed, idempotent path the demo uses.
-2. **A shared rate-limit store** (Redis) once you run more than one API instance.
-3. **Monitoring:** an error tracker (Sentry has a free tier) and alerts on `/ready`.
+1. **A live payment gateway.** Razorpay is built in; test mode is on until you add live keys.
+2. **Live keys** for Razorpay (after their KYC), and turning `ALLOW_DEMO_PAYMENTS` off.
+3. **Alerts** on `/ready` and the `/status` page (UptimeRobot is free).
 4. **Legal pages** (terms, privacy, returns policy) and GST invoicing, which the app doesn't generate yet.
+
+## Notes on live updates
+
+Order updates use a long-lived connection (`/api/events`). If your host or proxy cuts it, the web app
+reconnects by itself and still refreshes a pending payment every 15 seconds, so nothing breaks.
 
 ## Other hosts
 
