@@ -1,0 +1,66 @@
+# Render blueprint for the API: https://render.com/docs/blueprint-spec
+# Create it with: New > Blueprint > pick this repository.
+# Variables marked `sync: false` are asked for in the dashboard so secrets never live in git.
+
+services:
+  - type: web
+    name: lofticore-api
+    runtime: docker
+    dockerfilePath: ./apps/api/Dockerfile
+    dockerContext: .
+    plan: free # sleeps after ~15 minutes without traffic; the first request then takes ~30s
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+
+      # your web app's address, e.g. https://lofticore.vercel.app (must be https)
+      - key: CLIENT_ORIGIN
+        sync: false
+
+      # MongoDB Atlas connection string (free M0 cluster)
+      - key: MONGO_URI
+        sync: false
+
+      # generate each with: openssl rand -hex 32
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: PAYMENT_WEBHOOK_SECRET
+        sync: false
+
+      # photos and 3D models must live outside the container (its disk is wiped on deploy)
+      - key: STORAGE
+        value: cloudinary
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+
+      # email: any SMTP provider works (Brevo and Resend have free tiers)
+      - key: MAIL_TRANSPORT
+        value: smtp
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+
+      # the UPI payments are a demo: switch them on explicitly for a public demo site
+      - key: ALLOW_DEMO_PAYMENTS
+        value: "true"
+
+      # optional extras
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false

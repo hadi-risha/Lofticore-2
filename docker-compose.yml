@@ -1,0 +1,50 @@
+# Local dev infrastructure. Start with: npm run infra:up
+#
+# MongoDB is published on 27018 (not 27017) so it never clashes with a MongoDB installed
+# on your machine. Every port is bound to 127.0.0.1 so other machines on the network can
+# not reach these (MongoDB here has no password).
+#
+# mongo   - single-node replica set (transactions need one)
+# redis   - rate limits, cache, job queues
+# mailpit - catches every email the app sends; open http://localhost:8025
+
+services:
+  mongo:
+    image: mongo:7
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports:
+      - "127.0.0.1:27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: >
+        mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }"
+      interval: 5s
+      timeout: 10s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "127.0.0.1:6380:6379"
+
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "127.0.0.1:1025:1025" # SMTP
+      - "127.0.0.1:8025:8025" # web inbox
+
+  # product search with typo tolerance. Dev master key only; set a real one anywhere public.
+  meilisearch:
+    image: getmeili/meilisearch:v1.12
+    environment:
+      MEILI_MASTER_KEY: dev-meili-master-key-change-me
+      MEILI_ENV: development
+    ports:
+      - "127.0.0.1:7700:7700"
+    volumes:
+      - meili-data:/meili_data
+
+volumes:
+  mongo-data:
+  meili-data:

@@ -1,15 +1,35 @@
-# Ignore node_modules in both frontend and backend
-/node_modules/
-frontend/node_modules/
-backend/node_modules/
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
 
-# Ignore environment files in both frontend and backend
-frontend/.env
-backend/.env
+# env files - only the .example ones are committed
+.env
+.env.*
+!.env.example
 
-# Ignore system and editor files
+# uploads and local data
+apps/api/uploads/
+.docker-data/
+
+# editor / OS
 .DS_Store
 .idea/
 .vscode/
-npm-debug.log
-yarn-error.log
+npm-debug.log*
+yarn-error.log*
+
+# test output
+playwright-report/
+test-results/
+
+# local tooling and notes, not part of the app
+graphify-out/
+.claude/
+CLAUDE.md
+.dev-login
+docs/lighthouse/*.json
+
+# uploaded files made while testing
+public/uploads/
+apps/api/public/uploads/
