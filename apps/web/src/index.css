@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Lofticore palette - carried over from the original design */
+@theme {
+  --color-brand: #485d56;
+  --color-brand-dark: #36463f;
+  --color-brand-soft: #ebeee8;
+  --color-gold: #e3b873;
+  --color-bronze: #745f3d;
+  --color-cream: #fffcf6;
+  --color-ink: #25302c;
+  --color-muted: #7d716b;
+  --color-line: #e6e1d4;
+  --color-danger: #b4423a;
+  --color-success: #3c7a55;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-cream font-sans text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-display tracking-tight;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-brand;
+  }
+  /* slim scrollbars, as before */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #b9b3a3;
+    border-radius: 9999px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* the guided tour (driver.js) in the shop's colours */
+.driver-popover.lofticore-tour {
+  border-radius: 1rem;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  max-width: 320px;
+}
+.driver-popover.lofticore-tour .driver-popover-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+.driver-popover.lofticore-tour .driver-popover-description {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.driver-popover.lofticore-tour .driver-popover-next-btn,
+.driver-popover.lofticore-tour .driver-popover-close-btn:hover {
+  background: var(--color-brand);
+  color: white;
+  text-shadow: none;
+  border: 0;
+  border-radius: 9999px;
+  padding: 0.4rem 1rem;
+}
+.driver-popover.lofticore-tour .driver-popover-prev-btn {
+  border-radius: 9999px;
+  padding: 0.4rem 1rem;
+  text-shadow: none;
+}
