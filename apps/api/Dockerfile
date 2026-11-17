@@ -4,7 +4,7 @@
 # Two stages: one with everything needed to build, and a small one that carries
 # only the bundled server and its production dependencies.
 
-FROM node:22-slim AS build
+FROM node:26-slim AS build
 WORKDIR /app
 
 # manifests first, so installs are cached until a dependency changes
@@ -20,7 +20,7 @@ COPY apps/api apps/api
 RUN npm run build --workspace=@lofticore/api
 
 
-FROM node:22-slim AS runtime
+FROM node:26-slim AS runtime
 ENV NODE_ENV=production
 WORKDIR /app
 
